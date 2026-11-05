@@ -2,8 +2,244 @@
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@source '../../resources/views/**/*.blade.php';
 
-@theme {
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+|--------------------------------------------------------------------------
+| Palet "Elegant Hospitality"
+|--------------------------------------------------------------------------
+| Warm bone canvas, deep pine as warna utama, dan brass sebagai aksen.
+| Semua nilai memakai oklch agar gradasi ambient tetap konsisten.
+*/
+:root {
+    --radius: 0.75rem;
+
+    --background: oklch(0.986 0.005 85);
+    --foreground: oklch(0.235 0.014 55);
+
+    --card: oklch(0.998 0.003 90);
+    --card-foreground: oklch(0.235 0.014 55);
+    --popover: oklch(0.998 0.003 90);
+    --popover-foreground: oklch(0.235 0.014 55);
+
+    --primary: oklch(0.355 0.052 168);
+    --primary-foreground: oklch(0.972 0.012 95);
+
+    --secondary: oklch(0.955 0.014 86);
+    --secondary-foreground: oklch(0.29 0.03 60);
+
+    --muted: oklch(0.955 0.009 86);
+    --muted-foreground: oklch(0.525 0.017 68);
+
+    --accent: oklch(0.932 0.03 84);
+    --accent-foreground: oklch(0.31 0.032 62);
+
+    --destructive: oklch(0.577 0.215 25);
+    --destructive-foreground: oklch(0.985 0.005 90);
+
+    --border: oklch(0.9 0.012 82);
+    --input: oklch(0.895 0.012 82);
+    --ring: oklch(0.7 0.075 80);
+
+    --success: oklch(0.58 0.12 155);
+    --warning: oklch(0.75 0.14 70);
+
+    --brass: oklch(0.72 0.075 80);
+    --brass-soft: oklch(0.932 0.03 84);
+
+    --chart-1: oklch(0.355 0.052 168);
+    --chart-2: oklch(0.72 0.075 80);
+    --chart-3: oklch(0.5 0.06 200);
+    --chart-4: oklch(0.65 0.1 40);
+    --chart-5: oklch(0.45 0.04 130);
+}
+
+.dark {
+    --background: oklch(0.175 0.012 60);
+    --foreground: oklch(0.94 0.012 88);
+
+    --card: oklch(0.215 0.014 58);
+    --card-foreground: oklch(0.94 0.012 88);
+    --popover: oklch(0.215 0.014 58);
+    --popover-foreground: oklch(0.94 0.012 88);
+
+    --primary: oklch(0.72 0.085 158);
+    --primary-foreground: oklch(0.17 0.02 160);
+
+    --secondary: oklch(0.26 0.014 58);
+    --secondary-foreground: oklch(0.94 0.012 88);
+
+    --muted: oklch(0.26 0.012 58);
+    --muted-foreground: oklch(0.7 0.016 80);
+
+    --accent: oklch(0.31 0.028 76);
+    --accent-foreground: oklch(0.94 0.02 88);
+
+    --destructive: oklch(0.65 0.19 25);
+    --destructive-foreground: oklch(0.17 0.01 25);
+
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 14%);
+    --ring: oklch(0.72 0.075 80);
+
+    --success: oklch(0.68 0.13 155);
+    --warning: oklch(0.8 0.13 72);
+
+    --brass: oklch(0.78 0.09 82);
+    --brass-soft: oklch(0.32 0.03 78);
+}
+
+@theme inline {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Fraunces', ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-success: var(--success);
+    --color-warning: var(--warning);
+    --color-brass: var(--brass);
+    --color-brass-soft: var(--brass-soft);
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+}
+
+@theme {
+    --animate-ambient: ambient-drift 28s ease-in-out infinite;
+    --animate-rise: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes ambient-drift {
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate3d(1.5%, -1.5%, 0) scale(1.04);
+    }
+}
+
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 14px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Utilitas ambient
+|--------------------------------------------------------------------------
+| Lapisan cahaya lembut yang bergerak sangat lambat di belakang konten.
+*/
+@utility ambient-veil {
+    background-image:
+        radial-gradient(52rem 34rem at 4% -14%, oklch(0.82 0.11 82 / 0.5), transparent 62%),
+        radial-gradient(46rem 32rem at 100% -4%, oklch(0.62 0.075 168 / 0.26), transparent 62%),
+        radial-gradient(64rem 40rem at 46% 116%, oklch(0.74 0.07 48 / 0.22), transparent 62%);
+}
+
+@utility ambient-canvas {
+    background-image:
+        radial-gradient(60rem 40rem at 6% -8%, oklch(0.82 0.11 82 / 0.45), transparent 62%),
+        radial-gradient(52rem 36rem at 96% 0%, oklch(0.62 0.075 168 / 0.24), transparent 62%),
+        radial-gradient(70rem 44rem at 50% 100%, oklch(0.74 0.07 48 / 0.2), transparent 62%);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+@utility ambient-veil-soft {
+    background-image:
+        radial-gradient(40rem 26rem at 12% 0%, oklch(0.8 0.09 82 / 0.34), transparent 64%),
+        radial-gradient(38rem 26rem at 92% 8%, oklch(0.64 0.06 168 / 0.2), transparent 64%);
+}
+
+@utility ambient-panel {
+    background-image:
+        radial-gradient(28rem 18rem at 0% 0%, oklch(0.82 0.1 82 / 0.32), transparent 70%),
+        radial-gradient(26rem 20rem at 100% 100%, oklch(0.62 0.07 168 / 0.22), transparent 70%);
+}
+
+@utility glass-panel {
+    background-color: color-mix(in oklab, var(--card) 78%, transparent);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+}
+
+@utility brass-rule {    background-image: linear-gradient(
+        to right,
+        transparent,
+        oklch(0.72 0.075 80 / 0.55),
+        transparent
+    );
+}
+
+@utility brass-text {
+    background-image: linear-gradient(
+        100deg,
+        oklch(0.52 0.06 62),
+        oklch(0.78 0.11 82),
+        oklch(0.55 0.06 70)
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+
+    body {
+        @apply bg-background text-foreground antialiased;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    ::selection {
+        background-color: oklch(0.72 0.075 80 / 0.35);
+    }
+
+    /* Hormati preferensi pengguna yang mengurangi animasi. */
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-delay: 0ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            transition-delay: 0ms !important;
+            scroll-behavior: auto !important;
+        }
+    }
 }
