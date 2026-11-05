@@ -60,7 +60,7 @@
                         $photos = $roomPhotos;
                     @endphp
                     <x-card class="overflow-hidden transition-shadow hover:shadow-md">
-                        <div x-data="{ active: 0, photos: {{ json_encode($photos) }} }" class="relative aspect-[16/10] w-full overflow-hidden bg-muted">
+                        <div x-data="{ active: 0, photos: {{ json_encode($photos) }} }" class="relative aspect-16/10 w-full overflow-hidden bg-muted">
                             <template x-for="(photo, idx) in photos" :key="idx">
                                 <img x-show="active === idx" :src="photo" alt="Foto {{ $room->room_name }}"
                                     class="absolute inset-0 h-full w-full object-cover">
@@ -173,7 +173,7 @@
                         $photos = $hallPhotos;
                     @endphp
                     <x-card class="overflow-hidden transition-shadow hover:shadow-md">
-                        <div x-data="{ active: 0, photos: {{ json_encode($photos) }} }" class="relative aspect-[16/10] w-full overflow-hidden bg-muted">
+                        <div x-data="{ active: 0, photos: {{ json_encode($photos) }} }" class="relative aspect-16/10 w-full overflow-hidden bg-muted">
                             <template x-for="(photo, idx) in photos" :key="idx">
                                 <img x-show="active === idx" :src="photo" alt="Foto {{ $hall->hall_name }}"
                                     class="absolute inset-0 h-full w-full object-cover">
