@@ -19,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $assetUrl = config('app.asset_url');
+
+        if (is_string($assetUrl) && str_contains($assetUrl, '${')) {
+            config(['app.asset_url' => null]);
+        }
     }
 }
