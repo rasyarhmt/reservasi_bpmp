@@ -1,58 +1,139 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# BPMP - Simple.Calculia
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem reservasi kamar dan aula untuk **Banua To Dea**. Aplikasi ini menangani pemesanan online maupun walk-in, kalkulasi biaya, pembayaran DP/lunas dengan bukti transfer, check-in/check-out, denda keterlambatan, serta halaman kasir.
 
-## About Laravel
+**Peran pengguna:**
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Guest** — melihat beranda, katalog kamar & aula, dan kalkulator biaya.
+- **Customer** — membuat reservasi online, melihat reservasi sendiri, dan mengelola profil.
+- **Admin/Resepsionis** — mengelola semua reservasi, walk-in, check-in/out, kasir, kamar, aula, dan akun pelanggan.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Teknologi
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Laravel 13 (PHP 8.3)
+- Tailwind CSS 4 + Vite 8 + Alpine.js
+- SQLite (default) atau MySQL
+- Layanan WhatsApp berbasis [Baileys](https://github.com/WhiskeySockets/Baileys) (`wa-service/`)
 
-## Learning Laravel
+## Prasyarat
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Pastikan sudah terpasang:
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- PHP **8.3+** dengan ekstensi `sqlite3`, `pdo_sqlite`, dan `gd` (untuk pembuatan gambar/receipt)
+- Composer
+- Node.js **20+** dan npm
+- (Opsional) ngrok, untuk mengakses aplikasi dari luar jaringan lokal
+- (Opsional) Node.js untuk `wa-service` bila ingin mengaktifkan notifikasi WhatsApp
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## Setup Pertama Kali
 
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Jalankan dari root project:
 
 ```bash
-composer require laravel/boost --dev
+# 1. Install dependency PHP
+composer install
 
-php artisan boost:install
+# 2. Salin konfigurasi environment
+cp .env.example .env
+
+# 3. Generate application key
+php artisan key:generate
+
+# 4. Siapkan database SQLite
+touch database/database.sqlite
+
+# 5. Jalankan migrasi dan seeder
+php artisan migrate --seed
+
+# 6. Buat symlink storage (untuk bukti pembayaran & receipt)
+php artisan storage:link
+
+# 7. Install dependency frontend dan build asset
+npm install
+npm run build
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+> Jika memakai MySQL, ubah `DB_CONNECTION`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, dan `DB_PASSWORD` di `.env` sebelum langkah 5.
 
-## Contributing
+## Menjalankan Aplikasi
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Mode development:
 
-## Code of Conduct
+```bash
+composer run dev
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Perintah tersebut menjalankan server, Vite, dan queue sekaligus. Alternatif manual di dua terminal:
 
-## Security Vulnerabilities
+```bash
+php artisan serve
+npm run dev
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Akses aplikasi di `http://localhost:8000`.
 
-## License
+## Akun Hasil Seeder
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Peran | Email | Password |
+| --- | --- | --- |
+| Admin/Resepsionis | `admincalculia@gmail.com` | `password` |
+
+Akun **customer** dapat dibuat melalui halaman `/register`.
+
+## Queue Worker
+
+Job seperti pengiriman receipt/notifikasi WhatsApp diproses melalui queue (`QUEUE_CONNECTION=database`). Jalankan worker di terminal terpisah:
+
+```bash
+php artisan queue:work
+```
+
+## Notifikasi WhatsApp (Opsional)
+
+Aktifkan hanya bila diperlukan:
+
+1. Atur `.env`:
+
+   ```dotenv
+   WA_NOTIFY_ENABLED=true
+   WA_SERVICE_URL=http://127.0.0.1:3001
+   WA_SERVICE_TOKEN=token-rahasia
+   ```
+
+2. Jalankan layanan WhatsApp:
+
+   ```bash
+   cd wa-service
+   npm install
+   npm start
+   ```
+
+3. Scan QR yang muncul di terminal menggunakan WhatsApp, lalu jalankan queue worker.
+
+## Akses dari Luar Jaringan (Opsional)
+
+Untuk mengakses aplikasi dari luar jaringan lokal, jalankan tunnel (misalnya ngrok) ke port aplikasi:
+
+```bash
+ngrok http 8000
+```
+
+Biarkan `ASSET_URL` kosong di `.env` agar CSS/JS/gambar mengikuti host yang diakses.
+
+## Testing
+
+```bash
+php artisan test
+```
+
+## Struktur Singkat
+
+```text
+app/            Logika aplikasi (controllers, services, models, jobs)
+database/       Migrasi, seeder, dan database SQLite
+resources/      Views Blade, CSS, dan JavaScript
+routes/         Definisi route web
+wa-service/     Microservice pengirim WhatsApp (Baileys)
+```
+
+Panduan penggunaan untuk tiap peran pengguna dapat dilihat langsung dari dalam aplikasi.
